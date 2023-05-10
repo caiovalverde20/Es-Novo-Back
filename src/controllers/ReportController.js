@@ -1,10 +1,11 @@
-const Report = require('../models/Report');
-const User = require('../models/User');
+const Report = require('@models/Report');
+const User = require('@models/User');
 const moment = require('moment');
 
 module.exports = {
   async createReport(req, res) {
-    const { userId, date, startTime, endTime, text, tags } = req.body;
+    const { date, startTime, endTime, text, tags } = req.body;
+    const userId = req.params.userId;
 
     try {
       const user = await User.findById(userId);
