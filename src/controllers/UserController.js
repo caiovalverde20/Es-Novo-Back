@@ -1,6 +1,6 @@
-const User = require('@models/User');
+const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const service = require ('@services/loginService');
+const service = require ('../services/loginService');
 
 module.exports = {
     async createUser(req, res) {

@@ -1,5 +1,5 @@
-const Report = require('@models/Report');
-const User = require('@models/User');
+const Report = require('../models/Report');
+const User = require('../models/User');
 const moment = require('moment');
 
 module.exports = {
