@@ -24,17 +24,6 @@
     "nodemailer": "^6.4.17",
     "nodemon": "^2.0.7"
   },
-  "_moduleAliases": {
-    "@": "src",
-    "@app": "src/app.js",
-    "@config": "src/config/index.js",
-    "@controllers": "src/controllers",
-    "@services": "src/services",
-    "@helpers": "src/helpers",
-    "@models": "src/models",
-    "@routes": "src/routes",
-    "@middlewares": "src/middlewares"
-  },
   "devDependencies": {
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
