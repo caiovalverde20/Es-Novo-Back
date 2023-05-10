@@ -18,7 +18,12 @@ const UserSchema = new Schema({
     },
     token_list: {
         type: [String]
-    }
+    },
+    type: {
+        type: String,
+        enum: ['normal', 'adm', 'observer'],
+        default: 'normal'
+      }
 },
     {
         timestamps: true,
