@@ -1,7 +1,7 @@
 require("dotenv").config();
 require("module-alias/register");
-const app = require("@app");
-const config = require("@config");
+const app = require("./app");
+const config = require("./config/index");
 const databaseConfig = require("./config/database");
 
 async function startServer() {
