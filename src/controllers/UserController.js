@@ -5,7 +5,7 @@ const service = require ('../services/LoginService');
 module.exports = {
     async createUser(req, res) {
         const admId = req.params.admId;
-        const { name, password, email } = req.body;
+        const { name, password, email, type } = req.body;
       
         const admUser = await User.findOne({ _id: admId, type: 'adm' });
         if (!admUser) {
