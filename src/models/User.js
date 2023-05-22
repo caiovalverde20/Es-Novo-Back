@@ -23,7 +23,12 @@ const UserSchema = new Schema({
         type: String,
         enum: ['normal', 'adm', 'observer'],
         default: 'normal'
-      }
+      },
+    code: {
+        type: Number,
+        required: false,
+        default: null
+    }
 },
     {
         timestamps: true,
