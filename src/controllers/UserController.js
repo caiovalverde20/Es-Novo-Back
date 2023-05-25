@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const service = require ('../services/LoginService');
 const mailer = require('../services/MailSender');
+const S3Storage = require('../services/S3Storage');
 
 module.exports = {
     async createUser(req, res) {
@@ -32,6 +33,50 @@ module.exports = {
           return res.status(422).send(error.message);
         }
       },
+
+      async addProfilePicture (req, res) {
+        const id = req.params.id;
+        const { filename } = req.file;
+        
+        try {
+            const user = await User.findById(id);
+     
+            if (!user) return res.status(400).send({ "message": "Id não encontrado" });
+
+            if (user.profilePic.key != null) {
+                S3Storage.deleteFile(user.profilePic.key);
+            }
+
+            const path = `profile_pic/${id}/`;
+            user.profilePic = await S3Storage.saveFile(filename, path);
+            await user.save();
+
+            return res.status(200).send({ "image": user.profilePic.url });
+
+        } catch (error) {
+            return res.status(500).send({ error: error.message });
+        }
+    },
+
+    async removeProfilePicture (req, res) {
+      const id = req.params.id;
+
+      try {
+          const user = await User.findById(id);
+   
+          if (!user) return res.status(400).send({ "message": "Id não encontrado" });
+
+          S3Storage.deleteFile(user.profilePic.key);
+          
+          user.profilePic.url = null;
+          user.profilePic.key = null;
+          await user.save();
+
+          return res.status(200).send({ "message": "Imagem removida" });
+      } catch (error) {
+          return res.status(500).send({ error: error.message });
+      }
+  },
 
     async login(req, res) {
         const { email, password } = req.body;

@@ -28,7 +28,17 @@ const UserSchema = new Schema({
         type: Number,
         required: false,
         default: null
-    }
+    },
+    profilePic: {
+        url: {
+            type: String,
+            default: null
+        },
+        key: {
+            type: String,
+            default: null
+        }
+    },
 },
     {
         timestamps: true,
