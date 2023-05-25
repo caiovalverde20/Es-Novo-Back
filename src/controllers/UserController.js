@@ -7,7 +7,7 @@ const S3Storage = require('../services/S3Storage');
 module.exports = {
     async createUser(req, res) {
         const admId = req.params.admId;
-        const { name, password, email, type } = req.body;
+        const { name, password, email, type, userFunction } = req.body;
       
         const admUser = await User.findOne({ _id: admId, type: 'adm' });
         if (!admUser) {
@@ -25,7 +25,8 @@ module.exports = {
             name,
             password: encryptedPassword,
             email: email.toLowerCase(),
-            type
+            type,
+            userFunction
           });
       
           return res.status(201).send({ user });

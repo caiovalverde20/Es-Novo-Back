@@ -24,6 +24,10 @@ const UserSchema = new Schema({
         enum: ['normal', 'adm', 'observer'],
         default: 'normal'
       },
+    userFunction: {
+        type: String,
+        default: 'Membro'
+      },
     code: {
         type: Number,
         required: false,
