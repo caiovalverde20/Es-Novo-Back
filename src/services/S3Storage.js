@@ -21,8 +21,6 @@ module.exports = {
       const fileContent = await fs.promises.readFile(originalPath);
 
       const key = directory + filename;
-      console.log(key)
-      console.log(process.env.AWS_BUCKET_NAME)
 
       client.putObject({
          Bucket: process.env.AWS_BUCKET_NAME,
