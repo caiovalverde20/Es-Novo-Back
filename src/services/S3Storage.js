@@ -21,6 +21,8 @@ module.exports = {
       const fileContent = await fs.promises.readFile(originalPath);
 
       const key = directory + filename;
+      console.log(key)
+      console.log(process.env.AWS_BUCKET_NAME)
 
       client.putObject({
          Bucket: process.env.AWS_BUCKET_NAME,
@@ -32,12 +34,9 @@ module.exports = {
 
       await fs.promises.unlink(originalPath);
 
-      const [type, ] = ContentType.split('/')
-
       const media = {
          url: process.env.AWS_BUCKET_URL + key,
-         key: key,
-         type,
+         key: key
       }
 
       return media;

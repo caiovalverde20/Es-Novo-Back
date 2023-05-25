@@ -28,7 +28,7 @@ module.exports = {
     const fileSize = parseInt(req.headers['content-length']);
     const query = req.query.allowedType;
     
-    const allowedMimes = verifyMime(query);
+    let allowedMimes = verifyMime(query);
 
     if (allowedMimes.includes(file.mimetype)) {
       cb(null, true);
@@ -41,11 +41,7 @@ module.exports = {
 function verifyMime(query) {
   const imageType = ["image/jpeg", "image/pjpeg", "image/png"];
 
-  if (query == "all") {
-    allowedMimes = [...imageType];
-  } else if (query == "image") {
-    allowedMimes = imageType;
-  }
+  allowedMimes = imageType;
 
   return allowedMimes;
 }
