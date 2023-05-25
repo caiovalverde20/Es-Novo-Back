@@ -2,7 +2,13 @@ const Tag = require('../models/Tag');
 
 module.exports = {
   async createTag(req, res) {
+    const { admId } = req.params;
     const { name, color } = req.body;
+
+    const admUser = await User.findOne({ _id: admId, type: 'adm' });
+        if (!admUser) {
+          return res.status(401).send({ message: 'Apenas ADMs podem criar usuários' });
+        }
 
     try {
       const existingTag = await Tag.findOne({ name });
