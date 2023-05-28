@@ -68,13 +68,15 @@ module.exports = {
           return res.status(400).send({ message: 'Usuário não permitido' });
       }
 
-        const reports = await Report.find({
-            date: {
-                $gte: moment(dateStart, 'DD/MM/YYYY').startOf('day').toDate(),
-                $lte: moment(dateEnd, 'DD/MM/YYYY').endOf('day').toDate()
-            }
-        })
-        .sort({ date: 1, startTime: 1 });
+      const reports = await Report.find({
+        date: {
+            $gte: moment(dateStart, 'DD/MM/YYYY').startOf('day').toDate(),
+            $lte: moment(dateEnd, 'DD/MM/YYYY').endOf('day').toDate()
+        }
+      })
+      .sort({ date: 1, startTime: 1 })
+      .populate('user', '-password -token_list -code');
+    
 
         return res.status(200).send({ reports });
     } catch (error) {

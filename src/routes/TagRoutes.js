@@ -4,6 +4,6 @@ const authController = require('../middlewares/Auth');
 
 router.post('/tag/:admId', authController.authorizeAdm, TagController.createTag);
 router.get('/tag/all/', TagController.getAllTags);
-router.get('/tag/:name', TagController.getTagByName);
+router.get('/tag/:name', TagController.getTagByName);   
 
 module.exports = router;
