@@ -45,11 +45,17 @@ authorize = (req, res, next, type) => {
     if (!user) {
       return res.status(404).send({ error: 'Usuário não existe!' });
     }
+    console.log(user)
 
     const token_list = user.token_list;
     if (!token_list.includes(token)) {
       return res.status(401).send({ error: 'Token inválido' });
     }
+
+    // Libera aq quando sair da fase de teste
+    //if (req.params.userId && req.params.userId !== decoded.sub) {
+    //  return res.status(403).send({ error: 'Acesso negado: o ID do usuário na rota não corresponde ao ID do usuário do token' });
+    //}
 
     if (user.type == "user" && type == "adm") {
       return res.status(403).send({ error: 'Acesso negado' });
