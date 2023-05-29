@@ -34,7 +34,7 @@ module.exports = {
           return res.status(422).send(error.message);
         }
       },
-
+      
       async addProfilePicture (req, res) {
         const id = req.params.id;
         const { filename } = req.file;
