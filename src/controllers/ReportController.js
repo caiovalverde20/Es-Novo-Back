@@ -29,6 +29,57 @@ module.exports = {
     }
   },
 
+  async deleteReport(req, res) {
+    const userId = req.params.userId;
+    const reportId = req.params.reportId;
+
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(400).send({ message: 'Usuário não encontrado' });
+      }
+
+      await Report.deleteOne({
+        _id: reportId,
+        user: user._id,
+      });
+
+      return res.sendStatus(204);
+    } catch (error) {
+      return res.status(422).send(error.message);
+    }
+  },
+
+  async updateReport(req, res) {
+    const { date, startTime, endTime, text, tags } = req.body;
+    const userId = req.params.userId;
+    const reportId = req.params.reportId;
+
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(400).send({ message: 'Usuário não encontrado' });
+      }
+
+      const report = await Report.findOneAndUpdate({
+        _id: reportId,
+        user: user._id,
+      }, {
+        date: date == null? undefined : moment(date, 'DD/MM/YYYY').toDate(),
+        startTime: startTime == null? undefined : startTime,
+        endTime: endTime == null? undefined : endTime,
+        text: text == null? undefined : text,
+        tags: tags == null? undefined : tags
+      }, { new: 1 });
+
+      return res.status(200).send({ report });
+    } catch (error) {
+      return res.status(422).send(error.message);
+    }
+  },
+
   async getReportByUser(req, res) {
     const { userId, dateStart, dateEnd } = req.params;
 
