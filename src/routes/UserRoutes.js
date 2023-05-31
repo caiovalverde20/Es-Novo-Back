@@ -9,6 +9,8 @@ router.post('/user/:admId', authController.authorizeAdm, UserController.createUs
 router.delete('/user/:authId/:userId', authController.authorizeAdm, UserController.deleteUser);
 router.put('/user/:authId/:userId', authController.authorizeObserver, UserController.updateUser);
 
+router.get('/user/all', authController.authorizeUser, UserController.getAllUsers);
+
 router.post('/user/image/:id', authController.authorizeUser, multer(multerConfig).single('file'), UserController.addProfilePicture);
 router.delete('/user/image/:id', authController.authorizeUser, multer(multerConfig).single('file'), UserController.removeProfilePicture);
 

@@ -27,6 +27,10 @@ const ReportSchema = new Schema({
     type: [String],
     required: true,
   },
+  delayed: {
+    type: Boolean,
+    default: false
+  },
 }, {
   timestamps: true,
 });
