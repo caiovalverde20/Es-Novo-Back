@@ -45,7 +45,6 @@ authorize = (req, res, next, type) => {
     if (!user) {
       return res.status(404).send({ error: 'Usuário não existe!' });
     }
-    console.log(user)
 
     const token_list = user.token_list;
     if (!token_list.includes(token)) {

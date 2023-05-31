@@ -4,6 +4,43 @@ const service = require('../services/LoginService');
 const mailer = require('../services/MailSender');
 const S3Storage = require('../services/S3Storage');
 
+async function updateUserByOwner(req, res, authUser) {
+  const { name } = req.body;
+  
+  try {
+    const updatedUser = await User.findOneAndUpdate({
+      _id: authUser._id
+    }, {
+      name: name == null? undefined : name
+    }, { new: 1 });
+    
+    return res.status(200).send(updatedUser);
+  } catch(err) {
+    return res.status(500).send(err.message)
+  }
+
+}
+
+async function updateUserByAdmin(req, res, authUser) {
+  const { name, type, userFunction } = req.body;
+  const userId = req.params.userId;
+  
+  try {
+    const updatedUser = await User.findOneAndUpdate({
+      _id: userId
+    }, {
+      name: name == null? undefined : name,
+      type: type == null? undefined : type,
+      userFunction: userFunction == null? undefined : userFunction
+    }, { new: 1 });
+
+    return res.status(200).send(updatedUser);
+  } catch(err) {
+    return res.status(500).send(err.message)
+  }
+
+}
+
 module.exports = {
   async createUser(req, res) {
     const admId = req.params.admId;
@@ -32,6 +69,36 @@ module.exports = {
       return res.status(201).send({ user });
     } catch (error) {
       return res.status(422).send(error.message);
+    }
+  },
+
+  async deleteUser(req, res) {
+    const userId = req.params.userId;
+    const authId = req.params.authId;
+  
+    const authUser = await User.findOne({ _id: authId });
+
+    if(userId !== authId && authUser.type !== 'adm') {
+      return res.status(401).send({ message: 'Apenas o dono da conta ou um ADM podem excluir esta conta' });
+    }
+  
+    try {
+      await User.deleteOne({ _id: userId });
+  
+      return res.sendStatus(204);
+    } catch (error) {
+      return res.status(422).send(error.message);
+    }
+  },
+
+  async updateUser(req, res) {
+    const authId = req.params.authId;
+
+    const authUser = await User.findOne({ _id: authId });
+    if (authUser.type === 'adm') {
+      return await updateUserByAdmin(req, res, authUser);
+    } else {
+      return await updateUserByOwner(req, res, authUser);
     }
   },
 
@@ -153,5 +220,5 @@ module.exports = {
 
     return res.status(200).json({ message: "Senha alterada com sucesso!" });
 
-  }
+  },
 }
