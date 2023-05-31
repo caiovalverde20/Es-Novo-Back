@@ -6,6 +6,8 @@ const authController = require('../middlewares/Auth');
 
 router.post('/login', UserController.login);
 router.post('/user/:admId', authController.authorizeAdm, UserController.createUser);
+router.delete('/user/:authId/:userId', authController.authorizeAdm, UserController.deleteUser);
+router.put('/user/:authId/:userId', authController.authorizeObserver, UserController.updateUser);
 
 router.get('/user/all', authController.authorizeUser, UserController.getAllUsers);
 
