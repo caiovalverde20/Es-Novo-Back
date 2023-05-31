@@ -158,19 +158,4 @@ module.exports = {
     }
   },
 
-  async createReportDeadline(req, res) {
-    const { reportDeadline } = req.body;
-
-    try {
-        // Criar um novo prazo de relatório
-        const config = await Config.create({
-            reportDeadline: reportDeadline || moment().day(1).hour(12).minute(0).second(0).format(),
-        });
-
-        return res.status(201).send({ config });
-    } catch (error) {
-        return res.status(422).send(error.message);
-    }
-},
-
 }
