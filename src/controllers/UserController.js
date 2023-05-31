@@ -224,12 +224,26 @@ module.exports = {
 
   async getAllUsers(req, res) {
     try {
-      const users = await User.find();
+      const users = await User.find().select('-token_list -password');;
 
-      return res.status(200).send({ users }).select('-token_list -password');
+      return res.status(200).send({ users });
 
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }
   },
+
+  async getUserByName(req, res) {
+    const { name } = req.params;
+
+    try {
+      const regex = new RegExp(name.replace(/\s+/g, ''), 'i');
+      const users = await User.find({ name: { $regex: regex } }).select('-token_list -password');
+      
+      return res.status(200).send({ users });
+    } catch (error) {
+      return res.status(500).send(error.message);
+    }
+  },
+  
 }
