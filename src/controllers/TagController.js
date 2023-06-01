@@ -1,31 +1,32 @@
 const Tag = require('../models/Tag');
+const User = require('../models/User');
 
 module.exports = {
   async createTag(req, res) {
-    const { admId } = req.params;
-    const { name, color } = req.body;
+    try {
+      const { admId } = req.params;
+      const { name, color } = req.body;
 
-    const admUser = await User.findOne({ _id: admId, type: 'adm' });
-        if (!admUser) {
-          return res.status(401).send({ message: 'Apenas ADMs podem criar usuários' });
+      const admUser = await User.findOne({ _id: admId, type: 'adm' });
+          if (!admUser) {
+            return res.status(401).send({ message: 'Apenas ADMs podem criar usuários' });
+          }
+
+        const existingTag = await Tag.findOne({ name });
+        if (existingTag) {
+          return res.status(400).send({ message: 'A tag já existe' });
         }
 
-    try {
-      const existingTag = await Tag.findOne({ name });
-      if (existingTag) {
-        return res.status(400).send({ message: 'A tag já existe' });
+        const tag = await Tag.create({
+          name,
+          color,
+        });
+
+        return res.status(201).send({ tag });
+      } catch (error) {
+        return res.status(422).send(error.message);
       }
-
-      const tag = await Tag.create({
-        name,
-        color,
-      });
-
-      return res.status(201).send({ tag });
-    } catch (error) {
-      return res.status(422).send(error.message);
-    }
-  },
+    },
 
   async getAllTags(req, res) {
     try {
