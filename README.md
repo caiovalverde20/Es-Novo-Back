@@ -1,3 +1,6 @@
+## Documentação para utilização da rota pode ser encontrada em:
+> https://documenter.getpostman.com/view/26659782/2s93RTRsrx
+
 ## Setup base para uma API em NodeJS
 
 * Dependências básicas necessárias
