@@ -120,7 +120,8 @@ module.exports = {
                 $lte: moment(dateEnd, 'DD/MM/YYYY').endOf('day').toDate()
             }
         })
-        .sort({ date: 1, startTime: 1 });
+        .sort({user: 1, date: 1, startTime: 1,  })
+        .populate('user', '-password -token_list -code');
 
         return res.status(200).send({ reports });
     } catch (error) {
@@ -148,7 +149,7 @@ module.exports = {
             $lte: moment(dateEnd, 'DD/MM/YYYY').endOf('day').toDate()
         }
       })
-      .sort({ date: 1, startTime: 1 })
+      .sort({user: 1, date: 1, startTime: 1,  })
       .populate('user', '-password -token_list -code');
     
 
@@ -157,5 +158,59 @@ module.exports = {
         return res.status(422).send(error.message);
     }
   },
+
+  async getReportsByAllTags(req, res) {
+    try {
+      const { userId, dateStart, dateEnd, tags } = req.params;
+      const tagsArray = tags.split(',').map(tag => tag.trim());
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(400).send({ message: 'Usuário não encontrado' });
+    }
+
+      const reports = await Report.find({
+        date: {
+            $gte: moment(dateStart, 'DD/MM/YYYY').startOf('day').toDate(),
+            $lte: moment(dateEnd, 'DD/MM/YYYY').endOf('day').toDate()
+        },
+        tags: { $all: tagsArray }
+      })
+      .sort({user: 1, date: 1, startTime: 1,  })
+      .populate('user', '-password -token_list -code');
+  
+      return res.status(200).send({ reports });
+    } catch (error) {
+      return res.status(422).send(error.message);
+    }
+  },
+
+
+  async getReportsByAnyTags(req, res) {
+    try {
+      const { userId, dateStart, dateEnd, tags } = req.params;
+      const tagsArray = tags.split(',').map(tag => tag.trim());
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(400).send({ message: 'Usuário não encontrado' });
+    }
+
+      const reports = await Report.find({
+        date: {
+            $gte: moment(dateStart, 'DD/MM/YYYY').startOf('day').toDate(),
+            $lte: moment(dateEnd, 'DD/MM/YYYY').endOf('day').toDate()
+        },
+        tags: { $in: tagsArray }
+      })
+      .sort({user: 1, date: 1, startTime: 1,  })
+      .populate('user', '-password -token_list -code');
+  
+      return res.status(200).send({ reports });
+    } catch (error) {
+      return res.status(422).send(error.message);
+    }
+  },
+  
 
 }

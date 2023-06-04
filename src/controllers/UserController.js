@@ -12,7 +12,7 @@ async function updateUserByOwner(req, res, authUser) {
       _id: authUser._id
     }, {
       name: name == null? undefined : name
-    }, { new: 1 });
+    }, { new: 1 }).select('-token_list -password');;;
     
     return res.status(200).send(updatedUser);
   } catch(err) {
@@ -32,7 +32,7 @@ async function updateUserByAdmin(req, res, authUser) {
       name: name == null? undefined : name,
       type: type == null? undefined : type,
       userFunction: userFunction == null? undefined : userFunction
-    }, { new: 1 });
+    }, { new: 1 }).select('-token_list -password');;;
 
     return res.status(200).send(updatedUser);
   } catch(err) {
