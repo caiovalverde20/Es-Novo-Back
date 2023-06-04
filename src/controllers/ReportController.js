@@ -129,6 +129,65 @@ module.exports = {
     }
   },
 
+    async getReportByUserAnalytics(req, res) {
+      const { userId, dateStart, dateEnd } = req.params;
+
+      try {
+          const user = await User.findById(userId);
+
+          if (!user) {
+              return res.status(400).send({ message: 'Usuário não encontrado' });
+          }
+
+          const reports = await Report.find({
+              user: user._id,
+              date: {
+                  $gte: moment(dateStart, 'DD/MM/YYYY').startOf('day').toDate(),
+                  $lte: moment(dateEnd, 'DD/MM/YYYY').endOf('day').toDate()
+              }
+          })
+          .sort({user: 1, date: 1, startTime: 1})
+          .populate('user', '-password -token_list -code');
+
+          const delayedReports = await Report.countDocuments({
+              user: user._id,
+              delayed: true,
+              date: {
+                  $gte: moment(dateStart, 'DD/MM/YYYY').startOf('day').toDate(),
+                  $lte: moment(dateEnd, 'DD/MM/YYYY').endOf('day').toDate()
+              }
+          });
+
+          const onTimeReports = await Report.countDocuments({
+            user: user._id,
+            delayed: true,
+            date: {
+                $gte: moment(dateStart, 'DD/MM/YYYY').startOf('day').toDate(),
+                $lte: moment(dateEnd, 'DD/MM/YYYY').endOf('day').toDate()
+            }
+        });
+
+          let missedReports = 0;
+          for (let i = 1; i < reports.length; i++) {
+              let prevReportDate = moment(reports[i - 1].date);
+              let nextMondayPrevReport = prevReportDate.clone().startOf('week').add(1, 'weeks').day(1); // Next Monday for prevReportDate
+
+              let currentReportDate = moment(reports[i].date);
+              let nextMondayCurrentReport = currentReportDate.clone().startOf('week').add(1, 'weeks').day(1); // Next Monday for currentReportDate
+
+              // Count the number of days between the next Mondays of the reports
+              if (nextMondayCurrentReport.diff(nextMondayPrevReport, 'days') > 7) {
+                  missedReports++;
+              }
+          }
+
+          return res.status(200).send({ onTimeReports, delayedReports, missedReports });
+      } catch (error) {
+          return res.status(422).send(error.message);
+      }
+    },
+
+
   async getAllReportsByDate(req, res) {
     const { userId, dateStart, dateEnd } = req.params;
 
