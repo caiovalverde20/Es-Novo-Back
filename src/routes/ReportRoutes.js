@@ -9,6 +9,7 @@ router.delete('/report/:userId/:reportId', authController.authorizeUser, ReportC
 router.put('/report/:userId/:reportId', authController.authorizeUser, ReportController.updateReport);
 
 router.get('/report/:userId/:dateStart/:dateEnd', authController.authorizeUser, ReportController.getReportByUser);
+router.get('/report/analytics/:userId/:dateStart/:dateEnd', authController.authorizeUser, ReportController.getReportByUserAnalytics);
 router.get('/report/all/:userId/:dateStart/:dateEnd', authController.authorizeAdm, ReportController.getAllReportsByDate);
 router.get('/report/tag/all/:userId/:tags/:dateStart/:dateEnd', authController.authorizeUser, ReportController.getReportsByAllTags);
 router.get('/report/tag/any/:userId/:tags/:dateStart/:dateEnd', authController.authorizeUser, ReportController.getReportsByAnyTags);
