@@ -263,9 +263,9 @@ module.exports = {
     const { id } = req.params;
 
     try {
-      const users = await User.findById(id);
+      const user = await User.findById(id).select('-token_list -password');;
       
-      return res.status(200).send({ users });
+      return res.status(200).send({ user });
     } catch (error) {
       return res.status(500).send(error.message);
     }
