@@ -1,16 +1,32 @@
 {
-    "HTTP_CODE": {
-        "OK": 200,
-        "CREATED": 201,
-        "FORBIDDEN": 403,
-        "NOT_FOUND": 404,
-        "UNPROCESSABLE": 422,
-        "UNAUTHORIZED": 401,
-        "NOT_ACCEPTABLE": 406
-    },
-    "default_User":{
-		"name": "jorginho da silva",
-		"password": "12345",
-		"email": "teste@teste.com"
-    }
+  "HTTP_CODE": {
+    "OK": 200,
+    "CREATED": 201,
+    "FORBIDDEN": 403,
+    "NOT_FOUND": 404,
+    "UNPROCESSABLE": 422,
+    "UNAUTHORIZED": 401,
+    "NOT_ACCEPTABLE": 406
+  },
+  "default_User": {
+    "_id":"60b8dbba2e35f222d42a1a36",
+    "name": "jorginho da silva",
+    "password": "12345",
+    "email": "teste@teste.com",
+    "type": "normal",
+    "userFunction": "Membro"
+  },
+  "default_Tag": {
+    "name": "tag1",
+    "color": "#000000"
+  },
+  "default_Report": {
+    "user": "60b8dbba2e35f222d42a1a36", 
+    "date": "2023-06-04",
+    "startTime": "08:00",
+    "endTime": "17:00",
+    "text": "Relatório de teste",
+    "tags": ["tag1", "tag2"],
+    "delayed": false
+  }
 }
