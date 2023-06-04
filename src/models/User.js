@@ -23,7 +23,26 @@ const UserSchema = new Schema({
         type: String,
         enum: ['normal', 'adm', 'observer'],
         default: 'normal'
-      }
+      },
+    userFunction: {
+        type: String,
+        default: 'Membro'
+      },
+    code: {
+        type: Number,
+        required: false,
+        default: null
+    },
+    profilePic: {
+        url: {
+            type: String,
+            default: null
+        },
+        key: {
+            type: String,
+            default: null
+        }
+    },
 },
     {
         timestamps: true,
