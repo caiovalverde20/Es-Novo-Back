@@ -258,5 +258,17 @@ module.exports = {
       return res.status(500).send(error.message);
     }
   },
+
+  async getUserById(req, res) {
+    const { id } = req.params;
+
+    try {
+      const users = await User.findById(id);
+      
+      return res.status(200).send({ users });
+    } catch (error) {
+      return res.status(500).send(error.message);
+    }
+  },
   
 }
