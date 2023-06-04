@@ -7,9 +7,9 @@ const authController = require('../middlewares/Auth');
 router.post('/login', UserController.login);
 router.post('/user/:admId', authController.authorizeAdm, UserController.createUser);
 router.delete('/user/:authId/:userId', authController.authorizeUser, UserController.deleteUser);
-router.put('/user/:authId/:userId', authController.authorizeUser, UserController.updateUser);
+router.put('/user/:authId/:userId', authController.authorizeUser, multer(multerConfig).single('file'), UserController.updateUser);
 
-router.get('/user/all', authController.authorizeUser, UserController.getAllUsers);
+router.get('/user/all', authController.authorizeUser,  UserController.getAllUsers);
 router.get('/user/find/:name', authController.authorizeUser, UserController.getUserByName);
 
 router.post('/user/image/:id', authController.authorizeUser, multer(multerConfig).single('file'), UserController.addProfilePicture);

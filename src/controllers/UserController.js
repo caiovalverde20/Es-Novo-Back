@@ -93,8 +93,21 @@ module.exports = {
 
   async updateUser(req, res) {
     const authId = req.params.authId;
+    const { filename } = req.file || {};
+    const userId = req.params.userId;
 
+    const user = await User.findOne({ _id: userId });
     const authUser = await User.findOne({ _id: authId });
+
+    if(filename != null){
+      if (user.profilePic.key != null ) {
+        S3Storage.deleteFile(user.profilePic.key);
+      }
+      const path = `profile_pic/${authId}/`;
+      user.profilePic = await S3Storage.saveFile(filename, path);
+      await user.save();
+    }
+
     if (authUser.type === 'adm') {
       return await updateUserByAdmin(req, res, authUser);
     } else {
