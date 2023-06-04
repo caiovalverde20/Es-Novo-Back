@@ -187,6 +187,49 @@ module.exports = {
       }
     },
 
+    async getAllReportsAnalytics(req, res) {
+      const { userId, dateStart, dateEnd } = req.params;
+  
+      try {
+          const user = await User.find({_id:userId, type: 'adm' });
+          const users = await User.find().select('-token_list -password');
+  
+          if (!user) {
+              return res.status(400).send({ message: 'Nenhum usuário encontrado' });
+          }
+  
+          const startDate = moment(dateStart, 'DD/MM/YYYY').startOf('day').toDate();
+          const endDate = moment(dateEnd, 'DD/MM/YYYY').endOf('day').toDate();
+  
+          let lateUsers = [];
+          let noReportUsers = [];
+          let onTimeUsers = [];
+  
+          for (let user of users) {
+              const userReports = await Report.find({
+                  user: user._id,
+                  date: { $gte: startDate, $lte: endDate }
+              })
+  
+              const delayedReports = userReports.filter(report => report.delayed);
+              const onTimeReports = userReports.filter(report => !report.delayed);
+  
+              if (userReports.length === 0) {
+                  noReportUsers.push(user);
+              } else if (delayedReports.length > 0 && onTimeReports.length === 0) {
+                  lateUsers.push(user);
+              } else if (onTimeReports.length > 0) {
+                  onTimeUsers.push(user);
+              }
+          }
+  
+          return res.status(200).send({ lateUsers, noReportUsers, onTimeUsers });
+      } catch (error) {
+          return res.status(422).send(error.message);
+      }
+  },
+  
+
 
   async getAllReportsByDate(req, res) {
     const { userId, dateStart, dateEnd } = req.params;
