@@ -185,6 +185,10 @@ module.exports = {
 
     const user = await User.findOne({ email: email });
 
+    if (!user) {
+      return res.status(401).send({ message: "Usuario não existe" });
+    }
+
     const code = Math.floor(Math.random() * (9999 - 1000) + 1000);
 
     user.code = code;
